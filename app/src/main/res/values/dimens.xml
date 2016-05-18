@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="chat_detial_edit_area_height">48dp</dimen>
+    <dimen name="chat_edit_area_margin_top">10dp</dimen>
+    <dimen name="chat_avatar_size">32dp</dimen>
+    <dimen name="chat_item_margin_top">8dp</dimen>
+    <dimen name="chat_item_margin_left">70dp</dimen>
+</resources>
