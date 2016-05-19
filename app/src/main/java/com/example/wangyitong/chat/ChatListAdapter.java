@@ -1,12 +1,24 @@
 package com.example.wangyitong.chat;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.example.wangyitong.chat.model.MessageBean;
+import com.example.wangyitong.chat.model.MessageBody;
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by wangyitong on 2016/5/18.
@@ -61,16 +73,11 @@ public class ChatListAdapter extends BaseAdapter {
         ChatInfo info = datas.get(position);
         ChatListViewItem view;
         if (convertView == null) {
-//            if (getItemViewType(position) == TYPE_MY_TEXT) {
-//                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item, null);
-//            } else {
-//            else if (getItemViewType(position) == TYPE_OTHER_TEXT) {
-                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item, null);
-//            }
+            view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item, null);
         } else {
             view = (ChatListViewItem) convertView;
         }
-        view.setChatInfo(info, (info.getUid() == mCurUid));
+        view.setChatInfo(info, (info.getUid().equals(Utils.getDeviceMacAdress(mContext))));
         return view;
     }
 
@@ -85,16 +92,64 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     private void getFakeDatas() {
-        datas.add(new ChatInfo(0, R.drawable.icon_avatar_default, "hello"));
-        datas.add(new ChatInfo(0, R.drawable.icon_avatar_default, "hellooooo"));
-        datas.add(new ChatInfo(1, R.drawable.icon_avatar_other, "hello"));
-        datas.add(new ChatInfo(0, R.drawable.icon_avatar_default, "aaaaa"));
-        datas.add(new ChatInfo(1, R.drawable.icon_avatar_other, "hi"));
-        datas.add(new ChatInfo(0, R.drawable.icon_avatar_default, "xxxxxxx"));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Socket socket = new Socket("192.168.142.77", 5555);
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                    PrintWriter writer = new PrintWriter(socket.getOutputStream());
+                    writer.println("[userMac]" + Utils.getDeviceMacAdress(mContext));
+                    writer.flush();
+                    Log.d("SOCKET", reader.readLine());
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String result;
+                            try {
+                                while ((result = reader.readLine()) != null) {
+                                    Log.d("SOCKET", result);
+                                    parseMessage(result);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
-    public void addData(ChatInfo info) {
-        datas.add(info);
-        notifyDataSetChanged();
+    private void parseMessage(String json) {
+        MessageBody obj = new Gson().fromJson(json, MessageBody.class);
+
+        int bodyType = obj.getBodyType();
+        MessageBean msgObj = obj.getMessage();
+        if (bodyType == 1) {
+            String content = msgObj.getMessageContent();
+            String sendUserMac = msgObj.getSendUserMac();
+            Date date = new Date(msgObj.getDate());
+            ChatInfo info = new ChatInfo(sendUserMac, R.drawable.icon_avatar_other, content, date);
+
+            addData(info);
+        }
+    }
+
+    public void addData(final ChatInfo info) {
+        new Handler(mContext.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                datas.add(info);
+                notifyDataSetChanged();
+            }
+        });
     }
 }

@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class ChatDetailActivity extends AppCompatActivity {
     private int mCurrentUid;
     private ListView mChatListView;
@@ -57,7 +59,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                 Toast.makeText(ChatDetailActivity.this, "No content", Toast.LENGTH_SHORT).show();
                 return;
             }
-            mAdapter.addData(new ChatInfo(mCurrentUid, R.drawable.icon_avatar_default, content));
+            mAdapter.addData(new ChatInfo(Utils.getDeviceMacAdress(ChatDetailActivity.this), R.drawable.icon_avatar_default, content, new Date()));
             mContentInput.setText("");
             hideIMM(v);
         }
