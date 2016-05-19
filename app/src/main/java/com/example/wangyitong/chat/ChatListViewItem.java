@@ -2,17 +2,19 @@ package com.example.wangyitong.chat;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Created by wangyitong on 2016/5/18.
  */
-public class ChatListViewItem extends LinearLayout implements View.OnClickListener {
+public class ChatListViewItem extends RelativeLayout {
     private ImageView mAvatar;
     private TextView mContent;
+    private ChatMessageContainer mContainer;
 
     public ChatListViewItem(Context context) {
         super(context);
@@ -31,28 +33,42 @@ public class ChatListViewItem extends LinearLayout implements View.OnClickListen
         super.onFinishInflate();
         mAvatar = (ImageView) findViewById(R.id.img_avatar);
         mContent = (TextView) findViewById(R.id.chat_content);
-        mAvatar.setOnClickListener(this);
-        mContent.setOnClickListener(this);
+        mContainer = (ChatMessageContainer) findViewById(R.id.chat_message_container);
+        mAvatar.setOnClickListener(new OnAvatarClickListener());
+        mContent.setOnClickListener(new OnContentClickListener());
     }
 
-    public void setChatInfo(ChatInfo info) {
+    public void setChatInfo(ChatInfo info, boolean isAuthor) {
         if (info != null) {
-            mAvatar.setImageResource(info.getAvatar());
+            mAvatar.setImageResource(info.getmAvatar());
             mContent.setText(info.getContent());
+            updateLayout(isAuthor);
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_avatar:
-                mContent.setText("click avatar!");
-                break;
-            case R.id.chat_content:
-                mContent.setText("click content");
-                break;
-            default:
-                break;
+    private void updateLayout(boolean isAuthor) {
+        mContainer.setIsAuthor(isAuthor);
+        setGravity(isAuthor ? Gravity.RIGHT : Gravity.LEFT);
+        LayoutParams avatarLP = new LayoutParams(mAvatar.getLayoutParams());
+        LayoutParams contentLP =new LayoutParams(mContainer.getLayoutParams()) ;
+        avatarLP.addRule(isAuthor ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_PARENT_LEFT);
+        contentLP.addRule(isAuthor ? RelativeLayout.LEFT_OF : RelativeLayout.RIGHT_OF, mAvatar.getId());
+        mAvatar.setLayoutParams(avatarLP);
+        mContainer.setLayoutParams(contentLP);
+    }
+
+    class OnAvatarClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            mContent.setText("click avatar!");
+        }
+    }
+    class OnContentClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            mContent.setText("click content!");
         }
     }
 }

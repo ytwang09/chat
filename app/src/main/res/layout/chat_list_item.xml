@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.wangyitong.chat.ChatListViewItem xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/chat_item_margin_top"
+    android:background="@null">
+
+
+    <com.example.wangyitong.chat.ChatMessageContainer
+        android:id="@+id/chat_message_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chat_message_bg_drawable"
+        android:minHeight="@dimen/chat_avatar_height"
+        android:minWidth="@dimen/chat_avatar_width">
+        <TextView
+            android:id="@+id/chat_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/chat_message_padding"
+            android:paddingLeft="@dimen/chat_message_padding"
+            android:text="12124324fadfa\ngda\ngadf"/>
+
+    </com.example.wangyitong.chat.ChatMessageContainer>
+
+    <ImageView
+        android:id="@+id/img_avatar"
+        android:layout_width="@dimen/chat_avatar_width"
+        android:layout_height="@dimen/chat_avatar_height"
+        android:paddingLeft="@dimen/chat_avatar_margin"
+        android:paddingRight="@dimen/chat_avatar_margin"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_avatar_default" />
+
+</com.example.wangyitong.chat.ChatListViewItem>

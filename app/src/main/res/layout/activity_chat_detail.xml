@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorChatDetailBg">
 
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/rl_input"
         android:divider="@null"
+        android:background="@null"
         android:scrollbars="none" />
 
     <RelativeLayout
@@ -16,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorChatEditAreaBg"
         android:layout_marginTop="@dimen/chat_edit_area_margin_top">
 
         <EditText

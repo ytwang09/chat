@@ -16,6 +16,12 @@ public class ChatListAdapter extends BaseAdapter {
     private ArrayList<ChatInfo> datas = new ArrayList();
     private Context mContext;
     private int mCurUid;
+    private static final int TYPE_MY_TEXT = 0;
+    private static final int TYPE_OTHER_TEXT = 1;
+    private static final int TYPE_MY_VOICE = 2;
+    private static final int TYPE_OTHER_VOICE = 3;
+    private static final int TYPE_MY_IMAGE = 4;
+    private static final int TYPE_OTHER_IMAGE = 5;
 
     public ChatListAdapter(Context context, int curUid) {
         getFakeDatas();
@@ -40,30 +46,31 @@ public class ChatListAdapter extends BaseAdapter {
         return datas.size() > position ? position : -1;
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return datas.get(position).getUid() == mCurUid ? 0 : 1 ;
-    }
+//    @Override
+//    public int getViewTypeCount() {
+//        return 2;
+//    }
+//
+//    @Override
+//    public int getItemViewType(int position) {
+//        return datas.get(position).getUid() == mCurUid ? TYPE_MY_TEXT : TYPE_OTHER_TEXT ;
+//    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ChatInfo info = datas.get(position);
         ChatListViewItem view;
         if (convertView == null) {
-            if (getItemViewType(position)==0) {
-                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item_mine, null);
-            } else {
-                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item_other, null);
-            }
+//            if (getItemViewType(position) == TYPE_MY_TEXT) {
+//                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item, null);
+//            } else {
+//            else if (getItemViewType(position) == TYPE_OTHER_TEXT) {
+                view = (ChatListViewItem) LayoutInflater.from(mContext).inflate(R.layout.chat_list_item, null);
+//            }
         } else {
             view = (ChatListViewItem) convertView;
         }
-        view.setChatInfo(info);
+        view.setChatInfo(info, (info.getUid() == mCurUid));
         return view;
     }
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/back"
-        android:icon="@drawable/icon_identify_info"
+        android:icon="@drawable/ic_menu_emoticons"
         android:title="back"
         app:showAsAction="always" />
 </menu>
