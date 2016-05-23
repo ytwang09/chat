@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/back"
-        android:icon="@drawable/ic_menu_emoticons"
-        android:title="back"
+        android:id="@+id/friendlist"
+        android:icon="@drawable/ic_menu_friendslist"
+        android:title="list"
         app:showAsAction="always" />
 </menu>

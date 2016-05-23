@@ -1,6 +1,6 @@
 package com.example.wangyitong.chat.model;
 
-public class MessageBean {
+public class MessageChat{
     private String sendUserMac;
     private String receiveUserMac;
     private String messageContent;

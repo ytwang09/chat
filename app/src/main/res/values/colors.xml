@@ -6,4 +6,6 @@
 
     <color name="colorChatDetailBg">#cfcfcf</color>
     <color name="colorChatEditAreaBg">#ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="transparent_dark">#6f0e0e0e</color>
 </resources>

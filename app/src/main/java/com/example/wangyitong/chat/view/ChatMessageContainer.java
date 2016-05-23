@@ -1,8 +1,10 @@
-package com.example.wangyitong.chat;
+package com.example.wangyitong.chat.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import com.example.wangyitong.chat.R;
 
 /**
  * Created by wangyitong on 2016/5/19.

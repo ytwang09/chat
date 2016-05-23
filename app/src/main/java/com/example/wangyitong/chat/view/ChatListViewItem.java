@@ -1,4 +1,4 @@
-package com.example.wangyitong.chat;
+package com.example.wangyitong.chat.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.wangyitong.chat.R;
+import com.example.wangyitong.chat.model.ChatInfo;
 
 /**
  * Created by wangyitong on 2016/5/18.

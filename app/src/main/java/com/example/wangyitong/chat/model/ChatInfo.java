@@ -1,11 +1,12 @@
-package com.example.wangyitong.chat;
+package com.example.wangyitong.chat.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by wangyitong on 2016/5/18.
  */
-public class ChatInfo {
+public class ChatInfo implements Serializable {
     private String mUid;
     private String mUsername;
     private int mAvatar;
@@ -24,6 +25,8 @@ public class ChatInfo {
     public String getUid() {
         return mUid;
     }
+
+    public Date getDate() { return mDate; }
 
     public ChatInfo(String id, int bm, String s, Date date) {
         this.mUid = id;

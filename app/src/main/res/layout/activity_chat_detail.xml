@@ -3,16 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorChatDetailBg">
+    <include layout="@layout/toolbar" />
 
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="56dp"
         android:layout_above="@+id/rl_input"
+        android:paddingLeft="@dimen/chat_list_view_padding"
+        android:paddingRight="@dimen/chat_list_view_padding"
         android:divider="@null"
         android:background="@null"
         android:scrollbars="none" />
+
+    <FrameLayout
+        android:id="@+id/mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Choose a friend and chat"
+            android:gravity="center"/>
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_input"

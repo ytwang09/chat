@@ -3,9 +3,9 @@ package com.example.wangyitong.chat.model;
 /**
  * Created by wangyitong on 2016/5/19.
  */
-public class MessageBody {
+public class MessageChatBody<T> {
     private int bodyType;
-    private MessageBean message;
+    private T message;
     public int getBodyType() {
         return bodyType;
     }
@@ -14,11 +14,11 @@ public class MessageBody {
         this.bodyType = bodyType;
     }
 
-    public MessageBean getMessage() {
+    public T getMessage() {
         return message;
     }
 
-    public void setMessage(MessageBean message) {
+    public void setMessage(T message) {
         this.message = message;
     }
 
