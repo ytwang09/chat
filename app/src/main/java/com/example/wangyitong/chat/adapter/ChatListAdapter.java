@@ -61,7 +61,7 @@ public class ChatListAdapter extends BaseAdapter {
         } else {
             view = (ChatListViewItem) convertView;
         }
-        view.setChatInfo(info, (info.getUid().equals(mCurUid)));
+        view.setChatInfo(info, !info.getIsToMe());
         return view;
     }
 

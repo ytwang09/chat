@@ -24,6 +24,7 @@ import com.example.wangyitong.chat.Utils.DeviceUtils;
 import com.example.wangyitong.chat.adapter.ChatListAdapter;
 import com.example.wangyitong.chat.manager.SocketManager;
 import com.example.wangyitong.chat.model.ChatInfo;
+import com.example.wangyitong.chat.model.UserInfo;
 import com.example.wangyitong.chat.service.DispatchDataService;
 import com.example.wangyitong.chat.view.OnlineUserListPopup;
 
@@ -33,7 +34,7 @@ import java.util.Date;
 public class ChatDetailActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private String mCurrentUid;
-    private String mCurrentChatId;
+    private UserInfo mCurrentChatUser;
     private ListView mChatListView;
     private Button mBtnSendMsg;
     private EditText mContentInput;
@@ -50,7 +51,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         mScreenKBHeight = DeviceUtils.getDeviceHeightPx(this) / 3;
         mCurrentUid = DeviceUtils.getDeviceMacAddress(ChatDetailActivity.this);
-        mCurrentChatId = "";
+        mCurrentChatUser = (UserInfo) getIntent().getSerializableExtra("chatUser");
 
         initView();
         addListenerNAdapter();
@@ -64,7 +65,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void updateViewChatIdChanged() {
-        if (mCurrentChatId.equals("")) {
+        if (mCurrentChatUser == null) {
             findViewById(R.id.mask).setVisibility(View.VISIBLE);
             mBtnSendMsg.setEnabled(false);
         } else {
@@ -150,7 +151,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                 Toast.makeText(ChatDetailActivity.this, "No content", Toast.LENGTH_SHORT).show();
                 return;
             }
-            final ChatInfo info = new ChatInfo(mCurrentChatId, R.drawable.icon_avatar_default, content, new Date());
+            final ChatInfo info = new ChatInfo(mCurrentChatUser, content, new Date(), false);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -188,7 +189,7 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
             if (intent.getAction().equals(Constants.ACTION_UPDATE_ONLINE_USERS)) {
                 Bundle bundle = intent.getExtras();
-                ArrayList<String> onlines = bundle.getStringArrayList("onlines");
+                ArrayList<UserInfo> onlines = (ArrayList<UserInfo>) bundle.getSerializable("onlines");
                 initPopupWnd();
                 mOnlinePopup.updateData(onlines);
             }
@@ -198,8 +199,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     class CurChatIdChangedListener implements OnlineUserListPopup.OnCurChatIdChangedListener {
 
         @Override
-        public void chatIdChanged(String chatId) {
-            mCurrentChatId = chatId;
+        public void chatIdChanged(UserInfo chatUser) {
+            mCurrentChatUser = chatUser;
             updateViewChatIdChanged();
         }
     }

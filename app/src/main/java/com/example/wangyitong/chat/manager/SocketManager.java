@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DataUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
+import com.example.wangyitong.chat.model.UserInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,10 +70,10 @@ public class SocketManager {
                             context.sendBroadcast(intent);
                         } else if (data instanceof ArrayList) {
                             // TODO add macs into UserList
-                            ArrayList<String> list = (ArrayList<String>) data;
+                            ArrayList<UserInfo> list = (ArrayList<UserInfo>) data;
                             Intent intent = new Intent(Constants.ACTION_UPDATE_ONLINE_USERS);
                             Bundle bundle = new Bundle();
-                            bundle.putStringArrayList("onlines",list);
+                            bundle.putSerializable("onlines",list);
                             intent.putExtras(bundle);
                             context.sendBroadcast(intent);
                         }

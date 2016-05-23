@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.wangyitong.chat.R;
+import com.example.wangyitong.chat.Utils.DeviceUtils;
+import com.example.wangyitong.chat.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +19,7 @@ import java.util.HashSet;
  */
 public class OnlineUserListAdapter extends BaseAdapter {
 
-    private ArrayList<String> users = new ArrayList<String>();
+    private ArrayList<UserInfo> users = new ArrayList<UserInfo>();
     private HashSet<String> userSet = new HashSet<String>();
 
     private Context mContext;
@@ -32,7 +34,7 @@ public class OnlineUserListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public UserInfo getItem(int position) {
         return users.get(position);
     }
 
@@ -49,20 +51,21 @@ public class OnlineUserListAdapter extends BaseAdapter {
         } else {
             view = LayoutInflater.from(mContext).inflate(R.layout.online_user_list_item, null);
         }
-        ((TextView) view.findViewById(R.id.user_name)).setText(users.get(position));
+        ((TextView) view.findViewById(R.id.user_name)).setText(users.get(position).getName());
         return view;
     }
 
-    public void addData(String macAdd) {
-        if (!userSet.contains(macAdd)) {
+    public void addData(UserInfo info) {
+        String macAdd = info.getUserMac();
+        if (!userSet.contains(macAdd) && !macAdd.equals(DeviceUtils.getDeviceMacAddress(mContext))) {
             userSet.add(macAdd);
-            users.add(macAdd);
+            users.add(info);
         }
         notifyDataSetChanged();
     }
 
-    public void addDatas(ArrayList<String> adds) {
-        for (String item : adds) {
+    public void addDatas(ArrayList<UserInfo> infos) {
+        for (UserInfo item : infos) {
             addData(item);
         }
         notifyDataSetChanged();

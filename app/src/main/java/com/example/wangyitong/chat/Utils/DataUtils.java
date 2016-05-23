@@ -3,11 +3,10 @@ package com.example.wangyitong.chat.Utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.MessageChat;
 import com.example.wangyitong.chat.model.MessageChatBody;
-import com.example.wangyitong.chat.model.MessageListBean;
+import com.example.wangyitong.chat.model.UserInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -21,6 +20,15 @@ import java.util.Date;
  * Created by wangyitong on 2016/5/20.
  */
 public class DataUtils {
+    private static UserInfo sAuthor;
+    private static final String mAvatarUrl = "http://v1.qzone.cc/avatar/201507/13/19/46/55a3a4ff05262387.jpg!180x180.jpg";
+    public static UserInfo getAuthorInfo(Context context) {
+        if (sAuthor == null) {
+            sAuthor = new UserInfo(DeviceUtils.getDeviceMacAddress(context), DeviceUtils.getDeviceName(), mAvatarUrl);
+        }
+        return sAuthor;
+    }
+
     public static Object parseSysMessage(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -43,28 +51,24 @@ public class DataUtils {
         MessageChatBody<MessageChat> msgBody = new Gson().fromJson(json, new TypeToken<MessageChatBody<MessageChat>>(){}.getType());
         MessageChat chatMsg = msgBody.getMessage();
         String content = chatMsg.getMessageContent();
-        String sendUserMac = chatMsg.getSendUserMac();
+        UserInfo sendUserMac = chatMsg.getSendUserMac();
         Date date = new Date(chatMsg.getDate());
-        return new ChatInfo(sendUserMac, R.drawable.icon_avatar_other, content, date);
+        return new ChatInfo(sendUserMac, content, date, true);
     }
 
-    private static ArrayList<String> parseChatList(String json) {
+    private static ArrayList<UserInfo> parseChatList(String json) {
         //TODO parse data of mac list
-        MessageChatBody<ArrayList<MessageListBean>> msgBody = new Gson().fromJson(json, new TypeToken<MessageChatBody<ArrayList<MessageListBean>>>(){}.getType());
-        ArrayList<MessageListBean> userList = msgBody.getMessage();
-        ArrayList<String> macAdds = new ArrayList<>();
-        for(MessageListBean item : userList) {
-            macAdds.add(item.getUserMac());
-        }
-        return macAdds;
+        MessageChatBody<ArrayList<UserInfo>> msgBody = new Gson().fromJson(json, new TypeToken<MessageChatBody<ArrayList<UserInfo>>>(){}.getType());
+        ArrayList<UserInfo> userList = msgBody.getMessage();
+        return userList;
     }
 
     public static String formatJSONFromChatInfo(Context context, ChatInfo info) {
         MessageChat bean = new MessageChat();
         bean.setDate(info.getDate().getTime());
         bean.setMessageContent(info.getContent());
-        bean.setReceiveUserMac(info.getUid());
-        bean.setSendUserMac(DeviceUtils.getDeviceMacAddress(context));
+        bean.setReceiveUserMac(info.getChatUser());
+        bean.setSendUserMac(getAuthorInfo(context));
         MessageChatBody data = new MessageChatBody();
         data.setBodyType(1);
         data.setMessage(bean);

@@ -1,8 +1,8 @@
 package com.example.wangyitong.chat.model;
 
 public class MessageChat{
-    private String sendUserMac;
-    private String receiveUserMac;
+    private UserInfo sendUserMac;
+    private UserInfo receiveUserMac;
     private String messageContent;
 
     private long date;
@@ -15,19 +15,19 @@ public class MessageChat{
         this.date = date;
     }
 
-    public String getSendUserMac() {
+    public UserInfo getSendUserMac() {
         return sendUserMac;
     }
 
-    public void setSendUserMac(String sendUserMac) {
+    public void setSendUserMac(UserInfo sendUserMac) {
         this.sendUserMac = sendUserMac;
     }
 
-    public String getReceiveUserMac() {
+    public UserInfo getReceiveUserMac() {
         return receiveUserMac;
     }
 
-    public void setReceiveUserMac(String receiveUserMac) {
+    public void setReceiveUserMac(UserInfo receiveUserMac) {
         this.receiveUserMac = receiveUserMac;
     }
 

@@ -10,6 +10,7 @@ import android.widget.PopupWindow;
 
 import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.adapter.OnlineUserListAdapter;
+import com.example.wangyitong.chat.model.UserInfo;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class OnlineUserListPopup extends PopupWindow {
         initialize(context, root);
         setTouchable(true);
         setOutsideTouchable(true);
+        setFocusable(true);
     }
 
     private void initialize(Context context, View root) {
@@ -51,7 +53,7 @@ public class OnlineUserListPopup extends PopupWindow {
         return mAdapter.toString();
     }
 
-    public void updateData(ArrayList<String> data) {
+    public void updateData(ArrayList<UserInfo> data) {
         mAdapter.addDatas(data);
     }
 
@@ -80,6 +82,6 @@ public class OnlineUserListPopup extends PopupWindow {
     }
 
     public interface OnCurChatIdChangedListener {
-        void chatIdChanged(String chatId);
+        void chatIdChanged(UserInfo chatId);
     }
 }

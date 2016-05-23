@@ -9,10 +9,18 @@ import android.net.wifi.WifiManager;
  */
 public class DeviceUtils {
 
+    private static String sMac;
     public static String getDeviceMacAddress(Context context) {
-        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifi.getConnectionInfo();
-        return info.getMacAddress(); //获取mac地址
+        if (sMac == null) {
+            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = wifi.getConnectionInfo();
+            sMac = info.getMacAddress(); //获取mac地址
+        }
+        return sMac;
+    }
+
+    public static String getDeviceName() {
+        return android.os.Build.MANUFACTURER;
     }
 
     public static int getDeviceHeightPx(Context context) {

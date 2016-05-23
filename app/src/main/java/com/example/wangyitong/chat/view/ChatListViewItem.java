@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.wangyitong.chat.R;
+import com.example.wangyitong.chat.Utils.BitmapUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 
 /**
@@ -43,7 +44,7 @@ public class ChatListViewItem extends RelativeLayout {
 
     public void setChatInfo(ChatInfo info, boolean isAuthor) {
         if (info != null) {
-            mAvatar.setImageResource(info.getmAvatar());
+            mAvatar.setImageBitmap(BitmapUtils.getBitmapFromUrl(info.getChatUser().getPhoto()));
             mContent.setText(info.getContent());
             updateLayout(isAuthor);
         }
