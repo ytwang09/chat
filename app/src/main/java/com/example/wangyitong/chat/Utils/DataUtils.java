@@ -1,7 +1,6 @@
 package com.example.wangyitong.chat.Utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.MessageChat;
@@ -73,7 +72,12 @@ public class DataUtils {
         data.setBodyType(1);
         data.setMessage(bean);
         String gson = new Gson().toJson(data);
-        Log.d("SOCKET", gson);
+        LogUtils.d(gson);
         return gson;
+    }
+
+    public static String formatJSONForRegistMac( String mac, String name, String photo) {
+        UserInfo user = new UserInfo(mac, name, photo);
+        return new Gson().toJson(user);
     }
 }

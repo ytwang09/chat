@@ -11,5 +11,7 @@
         android:id="@+id/online_user_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"></ListView>
+        android:layout_below="@+id/toolbar"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"/>
 </RelativeLayout>

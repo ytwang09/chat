@@ -1,6 +1,7 @@
 package com.example.wangyitong.chat.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.wangyitong.chat.R;
-import com.example.wangyitong.chat.Utils.BitmapUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 
 /**
@@ -42,9 +42,9 @@ public class ChatListViewItem extends RelativeLayout {
         mContent.setOnClickListener(new OnContentClickListener());
     }
 
-    public void setChatInfo(ChatInfo info, boolean isAuthor) {
+    public void setChatInfo(final ChatInfo info, final boolean isAuthor, Bitmap bmChat, Bitmap bm) {
         if (info != null) {
-            mAvatar.setImageBitmap(BitmapUtils.getBitmapFromUrl(info.getChatUser().getPhoto()));
+            mAvatar.setImageBitmap(isAuthor ? bm : bmChat);
             mContent.setText(info.getContent());
             updateLayout(isAuthor);
         }

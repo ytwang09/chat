@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.Utils.DeviceUtils;
 import com.example.wangyitong.chat.model.UserInfo;
+import com.example.wangyitong.chat.view.OnlineListViewItem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,13 +45,15 @@ public class OnlineUserListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
+        OnlineListViewItem view;
         if (convertView != null) {
-            view = convertView;
+            view = (OnlineListViewItem) convertView;
         } else {
-            view = LayoutInflater.from(mContext).inflate(R.layout.online_user_list_item, null);
+            view = (OnlineListViewItem) LayoutInflater.from(mContext).inflate(R.layout.online_user_list_item, null);
         }
-        ((TextView) view.findViewById(R.id.user_name)).setText(users.get(position).getName());
+        final UserInfo info = getItem(position);
+
+        view.setData(info.getName(), info.getUserMac(), info.getPhoto());
         return view;
     }
 

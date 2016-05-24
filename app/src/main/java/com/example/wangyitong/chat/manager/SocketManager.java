@@ -3,10 +3,11 @@ package com.example.wangyitong.chat.manager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DataUtils;
+import com.example.wangyitong.chat.Utils.DeviceUtils;
+import com.example.wangyitong.chat.Utils.LogUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.UserInfo;
 
@@ -42,9 +43,7 @@ public class SocketManager {
                     mSocket = new Socket(Constants.SOCKET_IP, Constants.SOCKET_PORT);
                     mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
                     mWriter = new PrintWriter(mSocket.getOutputStream());
-
-                    mWriter.println(Constants.suffix_MAC + mac);
-                    mWriter.flush();
+                    sendRegisterMsgToServer(mac, DeviceUtils.getDeviceName(), Constants.sPhotoUrl);
                     getMessagesFromServer(context);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -60,7 +59,7 @@ public class SocketManager {
                 String json;
                 try {
                     while ((json = mReader.readLine()) != null) {
-                        Log.d("SOCKET", json);
+                        LogUtils.d(json);
                         Object data = DataUtils.parseSysMessage(json);
                         if (data instanceof ChatInfo) {
                             // TODO notify ChatListAdapter
@@ -85,9 +84,15 @@ public class SocketManager {
         }).start();
     }
 
-    public void sendMsgToServer(final Context context, final ChatInfo info) {
+    public void sendChatMsgToServer(final Context context, final ChatInfo info) {
         mWriter.println(DataUtils.formatJSONFromChatInfo(context, info));
         mWriter.flush();
     }
 
+    public void sendRegisterMsgToServer(String mac, String name, String photo) {
+        String  s = Constants.suffix_MAC + DataUtils.formatJSONForRegistMac(mac, name, photo);
+        LogUtils.d(s);
+        mWriter.println(s);
+        mWriter.flush();
+    }
 }

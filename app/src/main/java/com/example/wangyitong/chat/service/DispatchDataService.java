@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.example.wangyitong.chat.Utils.DeviceUtils;
+import com.example.wangyitong.chat.Utils.LogUtils;
 import com.example.wangyitong.chat.manager.SocketManager;
 
 /**
@@ -17,6 +18,7 @@ public class DispatchDataService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtils.d("server start");
         mSocketManager = SocketManager.getManager();
         mSocketManager.connect(DispatchDataService.this, DeviceUtils.getDeviceMacAddress(this));
     }

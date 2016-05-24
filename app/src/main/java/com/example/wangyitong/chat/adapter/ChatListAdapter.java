@@ -1,13 +1,16 @@
 package com.example.wangyitong.chat.adapter;
 
 import android.content.Context;
-import android.os.Handler;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.example.wangyitong.chat.R;
+import com.example.wangyitong.chat.Utils.BitmapLoadTool;
+import com.example.wangyitong.chat.Utils.Constants;
+import com.example.wangyitong.chat.Utils.ThreadUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.view.ChatListViewItem;
 
@@ -27,12 +30,33 @@ public class ChatListAdapter extends BaseAdapter {
 
     private ArrayList<ChatInfo> datas = new ArrayList();
     private Context mContext;
-    private String mCurUid;
+    private Bitmap mChatAvatar = null;
+    private Bitmap mAvatar = null;
 
-
-    public ChatListAdapter(Context context, String curUid) {
-        mCurUid = curUid;
+    public ChatListAdapter(Context context,final String chatUserAvatar) {
         mContext = context;
+        initAvatarBm(chatUserAvatar);
+
+    }
+
+    private void initAvatarBm(final String chatUserAvatar) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mChatAvatar == null) {
+                    mChatAvatar = BitmapLoadTool.getInstance().getImageByUrl(chatUserAvatar);
+                }
+                if (mAvatar == null) {
+                    mAvatar = BitmapLoadTool.getInstance().getImageByUrl(Constants.sPhotoUrl);
+                }
+                ThreadUtils.postOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override
@@ -61,7 +85,8 @@ public class ChatListAdapter extends BaseAdapter {
         } else {
             view = (ChatListViewItem) convertView;
         }
-        view.setChatInfo(info, !info.getIsToMe());
+
+        view.setChatInfo(info, !info.getIsToMe(), mChatAvatar, mAvatar);
         return view;
     }
 
@@ -76,7 +101,7 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     public void addData(final ChatInfo info) {
-        new Handler(mContext.getMainLooper()).post(new Runnable() {
+        ThreadUtils.postOnUiThread(new Runnable() {
             @Override
             public void run() {
                 datas.add(info);

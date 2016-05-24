@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,10 +24,8 @@ import com.example.wangyitong.chat.adapter.ChatListAdapter;
 import com.example.wangyitong.chat.manager.SocketManager;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.UserInfo;
-import com.example.wangyitong.chat.service.DispatchDataService;
 import com.example.wangyitong.chat.view.OnlineUserListPopup;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatDetailActivity extends AppCompatActivity {
@@ -75,11 +72,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void registerReceiverNService() {
-        startService(new Intent(this, DispatchDataService.class));
-
         mReceiver = new SysMsgBroadcastReceiver();
         IntentFilter filter = new IntentFilter(Constants.ACTION_UPDATE_CHAT_LIST_DATA);
-        filter.addAction(Constants.ACTION_UPDATE_ONLINE_USERS);
         registerReceiver(mReceiver, filter);
     }
 
@@ -99,7 +93,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void addListenerNAdapter() {
-        mAdapter = new ChatListAdapter(this, mCurrentUid);
+        mAdapter = new ChatListAdapter(this, mCurrentChatUser.getPhoto());
         mChatListView.setAdapter(mAdapter);
         mChatListView.addOnLayoutChangeListener(new OnChatListLayoutChangedListener());
         mBtnSendMsg.setOnClickListener(new OnSendClickListener());
@@ -116,30 +110,12 @@ public class ChatDetailActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private OnlineUserListPopup mOnlinePopup;
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.friendlist) {
-            if (mOnlinePopup != null && mOnlinePopup.hasShown()) {
-                // TODO dismiss popup menu
-                mOnlinePopup.dismiss();
-            } else {
-                // TODO show list
-                initPopupWnd();
-                mOnlinePopup.show(mToolbar);
+        if (item.getItemId() == R.id.right_btn) {
 
-                Log.d("SOCKET", "show popup" + mOnlinePopup.datas());
-            }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initPopupWnd() {
-        if (mOnlinePopup == null) {
-            mOnlinePopup = OnlineUserListPopup.getView(this);
-            mOnlinePopup.setOnCurChatIdChangedListener(new CurChatIdChangedListener());
-        }
     }
 
     class OnSendClickListener implements View.OnClickListener {
@@ -155,7 +131,7 @@ public class ChatDetailActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    SocketManager.getManager().sendMsgToServer(ChatDetailActivity.this, info);
+                    SocketManager.getManager().sendChatMsgToServer(ChatDetailActivity.this, info);
                 }
             }).start();
 
@@ -183,16 +159,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     class SysMsgBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.ACTION_UPDATE_CHAT_LIST_DATA)) {
-                ChatInfo data = (ChatInfo) intent.getSerializableExtra("chatInfo");
-                mAdapter.addData(data);
-            }
-            if (intent.getAction().equals(Constants.ACTION_UPDATE_ONLINE_USERS)) {
-                Bundle bundle = intent.getExtras();
-                ArrayList<UserInfo> onlines = (ArrayList<UserInfo>) bundle.getSerializable("onlines");
-                initPopupWnd();
-                mOnlinePopup.updateData(onlines);
-            }
+            ChatInfo data = (ChatInfo) intent.getSerializableExtra("chatInfo");
+            mAdapter.addData(data);
         }
     }
 

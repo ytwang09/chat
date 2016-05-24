@@ -8,4 +8,6 @@
     <color name="colorChatEditAreaBg">#ffffff</color>
     <color name="white">#ffffff</color>
     <color name="transparent_dark">#6f0e0e0e</color>
+    <color name="dark_grey">#1f1f1f</color>
+    <color name="light_grey">#858585</color>
 </resources>
