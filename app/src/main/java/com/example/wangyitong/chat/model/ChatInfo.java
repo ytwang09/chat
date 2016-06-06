@@ -32,4 +32,9 @@ public class ChatInfo implements Serializable {
         mDate = date;
         mIsToMe = isToMe;
     }
+
+    @Override
+    public String toString() {
+        return mChatUser.toString() + ":" + content + "[" + mDate.toString() + "]";
+    }
 }

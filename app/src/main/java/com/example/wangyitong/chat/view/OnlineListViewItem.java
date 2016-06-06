@@ -17,6 +17,7 @@ public class OnlineListViewItem extends RelativeLayout {
     private ImageView mAvatar;
     private TextView mName;
     private TextView mContent;
+    private TextView mNewMessage;
 
     public OnlineListViewItem(Context context) {
         super(context);
@@ -36,6 +37,7 @@ public class OnlineListViewItem extends RelativeLayout {
         mAvatar = (ImageView) findViewById(R.id.online_avatar);
         mName = (TextView) findViewById(R.id.online_name);
         mContent = (TextView) findViewById(R.id.online_content);
+        mNewMessage = (TextView) findViewById(R.id.new_message_flag);
     }
 
     public void setData(String name, String content, Bitmap avatar) {
@@ -49,5 +51,14 @@ public class OnlineListViewItem extends RelativeLayout {
         mContent.setText(content);
         BitmapLoadTool tool = BitmapLoadTool.getInstance();
         tool.showImageByUrl(mAvatar, avatar);
+    }
+
+    public void hasNewMessage(int count) {
+        if (count != 0) {
+            mNewMessage.setVisibility(VISIBLE);
+            mNewMessage.setText(count + "");
+        } else {
+            mNewMessage.setVisibility(GONE);
+        }
     }
 }

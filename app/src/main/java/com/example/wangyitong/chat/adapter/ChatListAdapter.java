@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.Utils.BitmapLoadTool;
 import com.example.wangyitong.chat.Utils.Constants;
+import com.example.wangyitong.chat.Utils.LogUtils;
 import com.example.wangyitong.chat.Utils.ThreadUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.view.ChatListViewItem;
@@ -101,13 +102,15 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     public void addData(final ChatInfo info) {
-        ThreadUtils.postOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                datas.add(info);
-                notifyDataSetChanged();
-            }
-        });
+        datas.add(info);
+        notifyDataSetChanged();
+    }
+    public void addDatas(ArrayList<ChatInfo> infos) {
+        for (ChatInfo info : infos) {
+            datas.add(info);
+            LogUtils.d(info.toString());
+        }
+        notifyDataSetChanged();
     }
 
 }

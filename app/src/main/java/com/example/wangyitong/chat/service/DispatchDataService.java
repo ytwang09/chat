@@ -31,6 +31,7 @@ public class DispatchDataService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LogUtils.d("server destroy");
     }
 
     @Nullable

@@ -1,11 +1,13 @@
 package com.example.wangyitong.chat.Utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by wangyitong on 2016/5/19.
@@ -47,5 +49,18 @@ public class DeviceUtils {
             }
         }
         sPath = finalFile.getAbsolutePath();
+    }
+
+    public static boolean isAppBackground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo info : processes) {
+            if (info.processName.equals(context.getPackageName())) {
+                if (info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

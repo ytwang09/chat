@@ -13,13 +13,19 @@
     <dimen name="chat_message_padding">4dp</dimen>
     <dimen name="chat_avatar_margin">8dp</dimen>
 
+    <dimen name="online_list_margin_left">8dp</dimen>
+    <dimen name="online_list_margin_right">16dp</dimen>
     <dimen name="online_user_item_height">88dp</dimen>
     <dimen name="online_user_item_margin">8dp</dimen>
-    <dimen name="online_user_item_width">112dp</dimen>
+    <dimen name="online_user_red_dot_margin">4dp</dimen>
+    <dimen name="online_user_avatar_container_width">88dp</dimen>
+    <dimen name="online_user_avatar_container_height">88dp</dimen>
     <dimen name="online_user_avatar_size">72dp</dimen>
-    <dimen name="online_user_avatar_margin">12dp</dimen>
+    <dimen name="online_user_avatar_margin">8dp</dimen>
     <dimen name="online_user_name_size">40dp</dimen>
     <dimen name="online_user_content_size">32dp</dimen>
     <dimen name="online_user_name_text_size">20sp</dimen>
     <dimen name="online_user_content_text_size">17sp</dimen>
+    <dimen name="online_user_new_msg_counter_height">24dp</dimen>
+    <dimen name="online_new_msg_text_size">18sp</dimen>
 </resources>

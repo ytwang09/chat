@@ -45,6 +45,7 @@
             android:id="@+id/et_input_content"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_detial_edit_area_height"
+            android:textColor="@color/black"
             android:layout_toLeftOf="@+id/btn_send" />
 
         <Button
@@ -52,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/chat_detial_edit_area_height"
             android:layout_alignParentRight="true"
+            android:textColor="@color/white"
             android:text="@string/chat_content_send" />
     </RelativeLayout>
 </RelativeLayout>

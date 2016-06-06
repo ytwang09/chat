@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.wangyitong.chat.Dao.DatabaseManager;
 import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DeviceUtils;
@@ -24,8 +25,9 @@ import com.example.wangyitong.chat.adapter.ChatListAdapter;
 import com.example.wangyitong.chat.manager.SocketManager;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.UserInfo;
-import com.example.wangyitong.chat.view.OnlineUserListPopup;
+import com.example.wangyitong.chat.notification.NotificationBuilder;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatDetailActivity extends AppCompatActivity {
@@ -58,16 +60,9 @@ public class ChatDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateViewChatIdChanged();
-    }
-
-    private void updateViewChatIdChanged() {
-        if (mCurrentChatUser == null) {
-            findViewById(R.id.mask).setVisibility(View.VISIBLE);
-            mBtnSendMsg.setEnabled(false);
-        } else {
-            findViewById(R.id.mask).setVisibility(View.GONE);
-            mBtnSendMsg.setEnabled(true);
+        ArrayList<ChatInfo> chats = DatabaseManager.getDBManager().queryTableChatAllById(mCurrentChatUser.getUserMac());
+        if (chats != null) {
+            mAdapter.addDatas(chats);
         }
     }
 
@@ -113,25 +108,31 @@ public class ChatDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.right_btn) {
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     class OnSendClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            String content = mContentInput.getText().toString();
+            final String content = mContentInput.getText().toString();
             if (content.isEmpty()) {
                 Toast.makeText(ChatDetailActivity.this, "No content", Toast.LENGTH_SHORT).show();
                 return;
             }
-            final ChatInfo info = new ChatInfo(mCurrentChatUser, content, new Date(), false);
+            final Date date = new Date();
+            final ChatInfo info = new ChatInfo(mCurrentChatUser, content, date, false);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     SocketManager.getManager().sendChatMsgToServer(ChatDetailActivity.this, info);
+                    DatabaseManager.getDBManager().insertToTableChat(info.getChatUser().getUserMac(), false, content, date);
                 }
             }).start();
 
@@ -160,16 +161,11 @@ public class ChatDetailActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             ChatInfo data = (ChatInfo) intent.getSerializableExtra("chatInfo");
-            mAdapter.addData(data);
-        }
-    }
-
-    class CurChatIdChangedListener implements OnlineUserListPopup.OnCurChatIdChangedListener {
-
-        @Override
-        public void chatIdChanged(UserInfo chatUser) {
-            mCurrentChatUser = chatUser;
-            updateViewChatIdChanged();
+            if (data.getChatUser().getUserMac().equals( mCurrentChatUser.getUserMac())) {
+                mAdapter.addData(data);
+            } else {
+                NotificationBuilder.showChatNotification(data, ChatDetailActivity.this);
+            }
         }
     }
 }

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.wangyitong.chat.Dao.DatabaseManager;
 import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DataUtils;
 import com.example.wangyitong.chat.Utils.DeviceUtils;
 import com.example.wangyitong.chat.Utils.LogUtils;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.UserInfo;
+import com.example.wangyitong.chat.notification.NotificationBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +30,8 @@ public class SocketManager {
     private BufferedReader mReader;
     private PrintWriter mWriter;
 
+    private DatabaseManager mDatabaseManager = DatabaseManager.getDBManager();
+
     private SocketManager() {
     }
 
@@ -40,12 +44,14 @@ public class SocketManager {
             @Override
             public void run() {
                 try {
+                    LogUtils.d("connecting to server");
                     mSocket = new Socket(Constants.SOCKET_IP, Constants.SOCKET_PORT);
                     mReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
                     mWriter = new PrintWriter(mSocket.getOutputStream());
                     sendRegisterMsgToServer(mac, DeviceUtils.getDeviceName(), Constants.sPhotoUrl);
                     getMessagesFromServer(context);
                 } catch (IOException e) {
+                    LogUtils.d("IOException" );
                     e.printStackTrace();
                 }
             }
@@ -66,6 +72,11 @@ public class SocketManager {
                             ChatInfo info = (ChatInfo) data;
                             Intent intent = new Intent(Constants.ACTION_UPDATE_CHAT_LIST_DATA);
                             intent.putExtra("chatInfo", info);
+                            if (DeviceUtils.isAppBackground(context)) {
+                                // TODO notification
+                                NotificationBuilder.showChatNotification(info, context);
+                            }
+                            mDatabaseManager.insertToTableChat(info.getChatUser().getUserMac(), true, info.getContent(), info.getDate());
                             context.sendBroadcast(intent);
                         } else if (data instanceof ArrayList) {
                             // TODO add macs into UserList
@@ -75,6 +86,9 @@ public class SocketManager {
                             bundle.putSerializable("onlines",list);
                             intent.putExtras(bundle);
                             context.sendBroadcast(intent);
+                            for (UserInfo info : list) {
+                                mDatabaseManager.insertToTableUser(info);
+                            }
                         }
                     }
                 } catch (IOException e) {

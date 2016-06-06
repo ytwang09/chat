@@ -12,15 +12,15 @@ import com.example.wangyitong.chat.model.UserInfo;
 import com.example.wangyitong.chat.view.OnlineListViewItem;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * Created by wangyitong on 2016/5/23.
  */
 public class OnlineUserListAdapter extends BaseAdapter {
 
-    private ArrayList<UserInfo> users = new ArrayList<UserInfo>();
-    private HashSet<String> userSet = new HashSet<String>();
+    private ArrayList<UserInfo> mUsers = new ArrayList<UserInfo>();
+    private HashMap<String, Integer> mNewMsgCounter = new HashMap<>();
 
     private Context mContext;
 
@@ -30,12 +30,12 @@ public class OnlineUserListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return users.size();
+        return mUsers.size();
     }
 
     @Override
     public UserInfo getItem(int position) {
-        return users.get(position);
+        return mUsers.get(position);
     }
 
     @Override
@@ -43,8 +43,19 @@ public class OnlineUserListAdapter extends BaseAdapter {
         return position;
     }
 
+    public int getItemIndex(UserInfo info) {
+        String chatId = info.getUserMac();
+        for (int i = 0; i < mUsers.size(); i++) {
+            UserInfo user = mUsers.get(i);
+            if (user.getUserMac().equals(chatId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public OnlineListViewItem getView(int position, View convertView, ViewGroup parent) {
         OnlineListViewItem view;
         if (convertView != null) {
             view = (OnlineListViewItem) convertView;
@@ -54,14 +65,19 @@ public class OnlineUserListAdapter extends BaseAdapter {
         final UserInfo info = getItem(position);
 
         view.setData(info.getName(), info.getUserMac(), info.getPhoto());
+        view.hasNewMessage(mNewMsgCounter.get(info.getUserMac()));
         return view;
+    }
+
+    public ArrayList<UserInfo> getUsers() {
+        return mUsers;
     }
 
     public void addData(UserInfo info) {
         String macAdd = info.getUserMac();
-        if (!userSet.contains(macAdd) && !macAdd.equals(DeviceUtils.getDeviceMacAddress(mContext))) {
-            userSet.add(macAdd);
-            users.add(info);
+        if (!mNewMsgCounter.containsKey(macAdd) && !macAdd.equals(DeviceUtils.getDeviceMacAddress(mContext))) {
+            mNewMsgCounter.put(macAdd, 0);
+            mUsers.add(info);
         }
         notifyDataSetChanged();
     }
@@ -73,8 +89,13 @@ public class OnlineUserListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void updateNewMessage(String chatId, int count) {
+        mNewMsgCounter.put(chatId, count);
+        notifyDataSetChanged();
+    }
+
     @Override
     public String toString() {
-        return users.toString();
+        return mUsers.toString();
     }
 }

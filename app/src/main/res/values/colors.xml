@@ -4,9 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorChatDetailBg">#cfcfcf</color>
+    <color name="colorChatDetailBg">#dfdfdf</color>
     <color name="colorChatEditAreaBg">#ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="transparent_dark">#6f0e0e0e</color>
     <color name="dark_grey">#1f1f1f</color>
     <color name="light_grey">#858585</color>
