@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +28,7 @@ import com.example.wangyitong.chat.notification.NotificationBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ChatDetailActivity extends AppCompatActivity {
-    private Toolbar mToolbar;
+public class ChatDetailActivity extends BaseActivity {
     private String mCurrentUid;
     private UserInfo mCurrentChatUser;
     private ListView mChatListView;
@@ -79,9 +76,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
+        setTitle(mCurrentChatUser.getName());
         mChatListView = (ListView) findViewById(R.id.chat_list);
         mBtnSendMsg = (Button) findViewById(R.id.btn_send);
         mContentInput = (EditText) findViewById(R.id.et_input_content);

@@ -63,6 +63,7 @@ public class DatabaseManager {
                 results.add(new UserInfo(userId, userName, userPic));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return results;
     }
 
@@ -75,6 +76,7 @@ public class DatabaseManager {
             String userPic = cursor.getString(cursor.getColumnIndex(Constants.USER_COLUNM_PIC));
             result = new UserInfo(userId, userName, userPic);
         }
+        cursor.close();
         return result;
     }
 
@@ -93,6 +95,7 @@ public class DatabaseManager {
                 results.add(new ChatInfo(chatUser, content, date, isToMe));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return results;
     }
 }

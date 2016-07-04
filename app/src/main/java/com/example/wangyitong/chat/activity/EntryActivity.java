@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,7 +24,7 @@ import com.example.wangyitong.chat.view.OnlineListViewItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class EntryActivity extends AppCompatActivity {
+public class EntryActivity extends BaseActivity {
     private ListView mOnlineUserList;
     private OnlineUserListAdapter mAdapter;
     private OnlineUserBroadcastReceiver mReceiver;
@@ -45,17 +43,7 @@ public class EntryActivity extends AppCompatActivity {
         initServiceNReceiver();
         initView();
 
-//        getSavedInstanceState(savedInstanceState);
         getDataFromDB();
-    }
-
-    private void getSavedInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            ArrayList<UserInfo> users = (ArrayList<UserInfo>) savedInstanceState.getSerializable("data");
-            if (users != null) {
-                mAdapter.addDatas(users);
-            }
-        }
     }
 
     private void getDataFromDB() {
@@ -93,8 +81,6 @@ public class EntryActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         setTitle("Welcome");
         mOnlineUserList = (ListView) findViewById(R.id.online_user_list);
         mAdapter = new OnlineUserListAdapter(this);
