@@ -9,6 +9,7 @@ import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DataUtils;
 import com.example.wangyitong.chat.Utils.DeviceUtils;
 import com.example.wangyitong.chat.Utils.LogUtils;
+import com.example.wangyitong.chat.Utils.ToastUtil;
 import com.example.wangyitong.chat.model.ChatInfo;
 import com.example.wangyitong.chat.model.UserInfo;
 import com.example.wangyitong.chat.notification.NotificationBuilder;
@@ -27,6 +28,8 @@ public class SocketManager {
 
     private static SocketManager sManager = new SocketManager();
     private Socket mSocket;
+    private boolean mIsConnected = false;
+    private String mMac;
     private BufferedReader mReader;
     private PrintWriter mWriter;
 
@@ -40,6 +43,7 @@ public class SocketManager {
     }
 
     public void connect(final Context context,final String mac) {
+        mMac = mac;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -50,8 +54,11 @@ public class SocketManager {
                     mWriter = new PrintWriter(mSocket.getOutputStream());
                     sendRegisterMsgToServer(mac, DeviceUtils.getDeviceName(), Constants.sPhotoUrl);
                     getMessagesFromServer(context);
+                    mIsConnected = true;
                 } catch (IOException e) {
                     LogUtils.d("IOException" );
+                    ToastUtil.showShortToast(context, "Fail to connect server!");
+                    mIsConnected = false;
                     e.printStackTrace();
                 }
             }
@@ -68,18 +75,18 @@ public class SocketManager {
                         LogUtils.d(json);
                         Object data = DataUtils.parseSysMessage(json);
                         if (data instanceof ChatInfo) {
-                            // TODO notify ChatListAdapter
+                            // notify ChatListAdapter
                             ChatInfo info = (ChatInfo) data;
                             Intent intent = new Intent(Constants.ACTION_UPDATE_CHAT_LIST_DATA);
                             intent.putExtra("chatInfo", info);
                             if (DeviceUtils.isAppBackground(context)) {
-                                // TODO notification
+                                // notification
                                 NotificationBuilder.showChatNotification(info, context);
                             }
                             mDatabaseManager.insertToTableChat(info.getChatUser().getUserMac(), true, info.getContent(), info.getDate());
                             context.sendBroadcast(intent);
                         } else if (data instanceof ArrayList) {
-                            // TODO add macs into UserList
+                            // add macs into UserList
                             ArrayList<UserInfo> list = (ArrayList<UserInfo>) data;
                             Intent intent = new Intent(Constants.ACTION_UPDATE_ONLINE_USERS);
                             Bundle bundle = new Bundle();
@@ -99,8 +106,17 @@ public class SocketManager {
     }
 
     public void sendChatMsgToServer(final Context context, final ChatInfo info) {
-        mWriter.println(DataUtils.formatJSONFromChatInfo(context, info));
-        mWriter.flush();
+        // TODO deal with no server or user offline
+        if (!mIsConnected) {
+            // retry connect to server
+            connect(context, mMac);
+        }
+        if (mIsConnected) {
+            mWriter.println(DataUtils.formatJSONFromChatInfo(context, info));
+            mWriter.flush();
+        } else {
+            ToastUtil.showShortToast(context, "Fail to connect server!");
+        }
     }
 
     public void sendRegisterMsgToServer(String mac, String name, String photo) {

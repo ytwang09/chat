@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.example.wangyitong.chat.R;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
 
     @Override
@@ -14,14 +14,16 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    public abstract void initView();
+
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
     @Override
-    public void setTitle(CharSequence title) {
+    protected void onResume() {
+        super.onResume();
         initToolbar();
-        super.setTitle(title);
     }
 }

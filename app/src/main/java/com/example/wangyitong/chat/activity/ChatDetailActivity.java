@@ -13,12 +13,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.wangyitong.chat.Dao.DatabaseManager;
 import com.example.wangyitong.chat.R;
 import com.example.wangyitong.chat.Utils.Constants;
 import com.example.wangyitong.chat.Utils.DeviceUtils;
+import com.example.wangyitong.chat.Utils.ToastUtil;
 import com.example.wangyitong.chat.adapter.ChatListAdapter;
 import com.example.wangyitong.chat.manager.SocketManager;
 import com.example.wangyitong.chat.model.ChatInfo;
@@ -75,7 +75,8 @@ public class ChatDetailActivity extends BaseActivity {
         unregisterReceiver(mReceiver);
     }
 
-    private void initView() {
+    @Override
+    public void initView() {
         setTitle(mCurrentChatUser.getName());
         mChatListView = (ListView) findViewById(R.id.chat_list);
         mBtnSendMsg = (Button) findViewById(R.id.btn_send);
@@ -118,7 +119,7 @@ public class ChatDetailActivity extends BaseActivity {
         public void onClick(View v) {
             final String content = mContentInput.getText().toString();
             if (content.isEmpty()) {
-                Toast.makeText(ChatDetailActivity.this, "No content", Toast.LENGTH_SHORT).show();
+                ToastUtil.showShortToast(ChatDetailActivity.this, "No content");
                 return;
             }
             final Date date = new Date();

@@ -80,7 +80,8 @@ public class EntryActivity extends BaseActivity {
         unregisterReceiver(mReceiver);
     }
 
-    private void initView() {
+    @Override
+    public void initView() {
         setTitle("Welcome");
         mOnlineUserList = (ListView) findViewById(R.id.online_user_list);
         mAdapter = new OnlineUserListAdapter(this);
